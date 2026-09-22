@@ -36,5 +36,11 @@ jobs:
       - name: Show Connection Commands
         run: |
           snow connection --help    
-
+      - name: Test OIDC Login
+        run: |
+          snow connection test -x \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --authenticator WORKLOAD_IDENTITY \
+            --workload-identity-provider OIDC
       
