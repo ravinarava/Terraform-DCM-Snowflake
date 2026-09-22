@@ -57,6 +57,15 @@ jobs:
         run: |
           terraform version  
 
+      - name: Check OIDC Token Variables
+        run: |
+          env | sort | grep TOKEN || true    
+
+      - name: Check OIDC Request Variables
+        run: |
+           echo "ACTIONS_ID_TOKEN_REQUEST_URL=${ACTIONS_ID_TOKEN_REQUEST_URL}"
+           echo "ACTIONS_ID_TOKEN_REQUEST_TOKEN exists? $([ -n "$ACTIONS_ID_TOKEN_REQUEST_TOKEN" ] && echo YES || echo NO)"    
+
       - name: Terraform Plan
         run: |
           terraform plan \
