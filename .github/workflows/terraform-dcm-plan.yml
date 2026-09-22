@@ -93,14 +93,16 @@ jobs:
           --authenticator WORKLOAD_IDENTITY \
           --workload-identity-provider OIDC
     
-    - name: Create Snow Connection
+    - name: Create Connection
       run: |
-        snow connection add github \
+        snow connection add \
+          --connection-name github \
           --account $SNOWFLAKE_ACCOUNT \
           --user $SNOWFLAKE_USER \
           --authenticator WORKLOAD_IDENTITY \
           --workload-identity-provider OIDC \
-          --default
+          --default \
+          --no-interactive
 
 
 
