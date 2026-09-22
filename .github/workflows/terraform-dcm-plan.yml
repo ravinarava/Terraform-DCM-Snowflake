@@ -117,6 +117,17 @@ jobs:
     - name: List Connections
       run: |
         snow connection list
+    
+    - name: Verify Current Session
+      run: |
+        snow sql -q "
+          select
+            current_user(),
+            current_role(),
+            current_database(),
+            current_schema(); "
+    
+
 
     - name: DCM Plan
       run: |
