@@ -1,0 +1,46 @@
+name: OIDC DCM Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: DEV-DCM
+
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: DEMO_FRESH_DCM_SVC
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Snowflake CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install snowflake-cli
+
+      - name: Verify Installation
+        run: |
+          snow --version
+      - name: Show Connection Help
+        run: |
+          snow connection test --help
+
+      - name: Show Connection Commands
+        run: |
+          snow connection --help    
+      - name: Test OIDC Login
+        run: |
+          snow connection test -x \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --authenticator WORKLOAD_IDENTITY \
+            --workload-identity-provider OIDC
+      
