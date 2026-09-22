@@ -1,0 +1,51 @@
+name: Terraform Plan
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform-plan:
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: DEV-Terraform
+
+    defaults:
+      run:
+        working-directory: terraform/environments/dev
+
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_ORGANIZATION: ${{ secrets.SNOWFLAKE_ORGANIZATION }}
+
+      TERRAFORM_USER: ${{ vars.TERRAFORM_USER }}
+      TERRAFORM_ROLE: ${{ vars.TERRAFORM_ROLE }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: |
+          terraform plan \
+            -var="snowflake_account=${SNOWFLAKE_ACCOUNT}" \
+            -var="snowflake_organization=${SNOWFLAKE_ORGANIZATION}" \
+            -var="terraform_user=${TERRAFORM_USER}" \
+            -var="terraform_role=${TERRAFORM_ROLE}"
