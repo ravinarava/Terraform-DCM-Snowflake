@@ -1,0 +1,94 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        type: choice
+        options:
+          - DEV
+          - TEST
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+
+  terraform-apply:
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: ${{ inputs.environment }}-Terraform
+
+    defaults:
+      run:
+        working-directory: terraform/environments/dev
+
+    env:
+      TF_SNOWFLAKE_ACCOUNT: ${{ vars.TF_SNOWFLAKE_ACCOUNT }}
+      TF_SNOWFLAKE_ORGANIZATION: ${{ vars.TF_SNOWFLAKE_ORGANIZATION }}
+      TERRAFORM_USER: ${{ vars.TERRAFORM_USER }}
+      TERRAFORM_ROLE: ${{ vars.TERRAFORM_ROLE }}
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.13.3
+
+      - name: Get GitHub OIDC Token
+        id: oidc
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const token = await core.getIDToken('snowflakecomputing.com');
+            core.setOutput('token', token);
+
+      - name: Terraform Init
+        run: terraform init -upgrade
+
+      - name: Terraform Apply
+        env:
+          SNOWFLAKE_TOKEN: ${{ steps.oidc.outputs.token }}
+        run: |
+          terraform apply -auto-approve \
+            -var="snowflake_account=${TF_SNOWFLAKE_ACCOUNT}" \
+            -var="snowflake_organization=${TF_SNOWFLAKE_ORGANIZATION}" \
+            -var="terraform_user=${TERRAFORM_USER}" \
+            -var="terraform_role=${TERRAFORM_ROLE}"
+
+  dcm-deploy:
+
+    runs-on: ubuntu-latest
+
+    needs: terraform-apply
+
+    environment:
+      name: ${{ inputs.environment }}-DCM
+
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ vars.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ vars.DCM_USER }}
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: snowflakedb/snowflake-actions@v3
+        with:
+          use-oidc: true
+
+      - name: DCM Deploy
+        run: |
+          snow dcm deploy \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --authenticator WORKLOAD_IDENTITY \
+            --workload-identity-provider OIDC \
+            --target ${{ inputs.environment }}
