@@ -53,6 +53,10 @@ jobs:
       - name: Show Environment
         run: env | sort | grep SNOWFLAKE
 
+      - name: Terraform Version
+        run: |
+          terraform version  
+
       - name: Terraform Plan
         run: |
           terraform plan \
