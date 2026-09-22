@@ -42,7 +42,12 @@ jobs:
 
       - name: Terraform Validate
         run: terraform validate
-
+      - name: Show Variables
+          run: |
+            echo "ORG=${TF_SNOWFLAKE_ORGANIZATION}"
+            echo "ACCOUNT=${TF_SNOWFLAKE_ACCOUNT}"
+            echo "ROLE=${TERRAFORM_ROLE}"
+            echo "USER=${TERRAFORM_USER}"
       - name: Terraform Plan
         run: |
           terraform plan \
