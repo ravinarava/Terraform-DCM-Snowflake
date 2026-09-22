@@ -21,11 +21,10 @@ jobs:
         working-directory: terraform/environments/dev
 
     env:
-      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-      SNOWFLAKE_ORGANIZATION: ${{ secrets.SNOWFLAKE_ORGANIZATION }}
-
-      TERRAFORM_USER: ${{ vars.TERRAFORM_USER }}
-      TERRAFORM_ROLE: ${{ vars.TERRAFORM_ROLE }}
+       TF_SNOWFLAKE_ACCOUNT: ${{ vars.TF_SNOWFLAKE_ACCOUNT }}
+       TF_SNOWFLAKE_ORGANIZATION: ${{ vars.TF_SNOWFLAKE_ORGANIZATION }}
+       TERRAFORM_USER: ${{ vars.TERRAFORM_USER }}
+       TERRAFORM_ROLE: ${{ vars.TERRAFORM_ROLE }}
 
     steps:
       - name: Checkout
@@ -45,7 +44,7 @@ jobs:
       - name: Terraform Plan
         run: |
           terraform plan \
-            -var="snowflake_account=${SNOWFLAKE_ACCOUNT}" \
-            -var="snowflake_organization=${SNOWFLAKE_ORGANIZATION}" \
+            -var="snowflake_account=${TF_SNOWFLAKE_ACCOUNT}" \
+            -var="snowflake_organization=${TF_SNOWFLAKE_ORGANIZATION}" \
             -var="terraform_user=${TERRAFORM_USER}" \
             -var="terraform_role=${TERRAFORM_ROLE}"
