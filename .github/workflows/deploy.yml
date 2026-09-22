@@ -70,7 +70,8 @@ jobs:
           -var="terraform_role=${TERRAFORM_ROLE}" \
           module.warehouse.snowflake_warehouse.this TF_DEMO_WH
           fi
-
+      
+     
 
       - name: Terraform Apply
         env:
@@ -105,11 +106,14 @@ jobs:
       
       - name: DCM Connection Test
         run: |
-          snow connection test -x \
+          snow connection add \
+            --connection-name github \
             --account $SNOWFLAKE_ACCOUNT \
             --user $SNOWFLAKE_USER \
             --authenticator WORKLOAD_IDENTITY \
-            --workload-identity-provider OIDC
+            --workload-identity-provider OIDC \
+            --default \
+            --no-interactive
 
       - name: DCM Deploy
         run: |
