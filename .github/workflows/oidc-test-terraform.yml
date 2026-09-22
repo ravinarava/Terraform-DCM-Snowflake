@@ -21,7 +21,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: Snowflake-Labs/snowflake-cli-action@v1
+      - name: Install Snowflake CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install snowflake-cli
+
+      - name: Verify Installation
+        run: |
+          snow --version
 
       - name: Test OIDC Login
         run: |
