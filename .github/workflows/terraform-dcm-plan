@@ -1,0 +1,25 @@
+name: Plan
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Environment
+        required: true
+        type: choice
+        options:
+          - DEV
+          - TEST
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  show-environment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print Environment
+        run: |
+          echo "Selected Environment = ${{ inputs.environment }}"
