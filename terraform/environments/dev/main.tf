@@ -1,3 +1,7 @@
+locals {
+  environment = "dev"
+}
+
 module "warehouse" {
   source = "../../modules/warehouse"
 
