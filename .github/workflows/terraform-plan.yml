@@ -50,6 +50,9 @@ jobs:
             echo "ROLE=${TERRAFORM_ROLE}"
             echo "USER=${TERRAFORM_USER}"
       
+      - name: Show Environment
+        run: env | sort | grep SNOWFLAKE
+
       - name: Terraform Plan
         run: |
           terraform plan \
