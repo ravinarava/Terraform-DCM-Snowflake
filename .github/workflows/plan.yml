@@ -1,4 +1,4 @@
-name: Terraform DCM Plan
+name: plan
 
 on:
   workflow_dispatch:
