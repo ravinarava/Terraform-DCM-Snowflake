@@ -1,0 +1,31 @@
+name: OIDC Terraform Test
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: DEV-Terraform
+
+    env:
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: DEMO_FRESH_TERRAFORM_SVC
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: Snowflake-Labs/snowflake-cli-action@v1
+
+      - name: Test OIDC Login
+        run: |
+          snow connection test \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --authenticator WORKLOAD_IDENTITY
