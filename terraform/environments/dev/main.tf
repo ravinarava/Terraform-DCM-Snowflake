@@ -9,6 +9,6 @@ module "warehouse" {
     snowflake = snowflake
   }
 
-  warehouse_name = "TF_DEMO_WH"
+  warehouse_name = "TF_DEMO_WH_1"
   warehouse_size = "XSMALL"
 }
