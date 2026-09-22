@@ -2,13 +2,13 @@ locals {
   environment = "dev"
 }
 
-module "warehouse" {
-  source = "../../modules/warehouse"
+#module "warehouse" {
+ # source = "../../modules/warehouse"
 
-  providers = {
-    snowflake = snowflake
-  }
+  #providers = {
+   # snowflake = snowflake
+  #}
 
-  warehouse_name = "TF_DEMO_WH"
-  warehouse_size = "XSMALL"
-}
+  #warehouse_name = "TF_DEMO_WH"
+  #warehouse_size = "XSMALL"
+#}
