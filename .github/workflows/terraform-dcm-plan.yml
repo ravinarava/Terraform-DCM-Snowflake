@@ -93,6 +93,18 @@ jobs:
           --authenticator WORKLOAD_IDENTITY \
           --workload-identity-provider OIDC
     
+    - name: Verify Connection
+      run: |
+        snow connection test -x \
+          --account $SNOWFLAKE_ACCOUNT \
+          --user $SNOWFLAKE_USER \
+          --authenticator WORKLOAD_IDENTITY \
+          --workload-identity-provider OIDC
+
+    - name: List Connections
+      run: |
+        snow connection list
+
     - name: DCM Plan
       run: |
         snow dcm plan \
