@@ -52,6 +52,25 @@ jobs:
 
       - name: Terraform Init
         run: terraform init -upgrade
+      
+      - name: Import Existing Warehouse
+        env:
+
+          SNOWFLAKE_TOKEN: ${{ steps.oidc.outputs.token }}
+          
+        run: |
+          
+          if terraform state show module.warehouse.snowflake_warehouse.this > /dev/null 2>&1; then
+          echo "Warehouse already managed by Terraform"
+          else
+          terraform import \
+          -var="snowflake_account=${TF_SNOWFLAKE_ACCOUNT}" \
+          -var="snowflake_organization=${TF_SNOWFLAKE_ORGANIZATION}" \
+          -var="terraform_user=${TERRAFORM_USER}" \
+          -var="terraform_role=${TERRAFORM_ROLE}" \
+          module.warehouse.snowflake_warehouse.this TF_DEMO_WH
+          fi
+
 
       - name: Terraform Apply
         env:
