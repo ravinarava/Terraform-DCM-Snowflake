@@ -1,0 +1,15 @@
+manifest_version: 2
+
+type: DCM_PROJECT
+
+default_target: DEV
+
+targets:
+
+  DEV:
+    account_identifier: IVULRLR-AL32991
+    project_name: DEMO_FRESH_DB.PUBLIC.DEMO_DCM_PROJECT
+
+  TEST:
+    account_identifier: IVULRLR-AL32991
+    project_name: DEMO_FRESH_DB.PUBLIC.DEMO_DCM_PROJECT
