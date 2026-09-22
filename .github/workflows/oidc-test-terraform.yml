@@ -29,6 +29,13 @@ jobs:
       - name: Verify Installation
         run: |
           snow --version
+      - name: Show Connection Help
+        run: |
+          snow connection test --help
+
+      - name: Show Connection Commands
+        run: |
+          snow connection --help    
 
       - name: Test OIDC Login
         run: |
