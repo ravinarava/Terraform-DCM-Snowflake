@@ -83,6 +83,14 @@ jobs:
       - uses: snowflakedb/snowflake-actions@v3
         with:
           use-oidc: true
+      
+      - name: DCM Connection Test
+        run: |
+          snow connection test -x \
+            --account $SNOWFLAKE_ACCOUNT \
+            --user $SNOWFLAKE_USER \
+            --authenticator WORKLOAD_IDENTITY \
+            --workload-identity-provider OIDC
 
       - name: DCM Deploy
         run: |
